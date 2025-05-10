@@ -58,7 +58,7 @@ const CreateBlogForm = () => {
     }
 
     return (
-        <Card className="w-full">
+        <Card className="w-full max-w-[700px] mx-auto">
             <CardHeader>
                 <CardTitle className="text-2xl font-bold">Create a Blog post</CardTitle>
                 <CardDescription>
