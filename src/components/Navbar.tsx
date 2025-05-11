@@ -4,10 +4,8 @@ import { useState } from "react";
 import ResponsiveNavBar from "./ResponsiveNavbar";
 import { NavLink } from "react-router";
 
-const Navbar = () => {
+const Navbar = ({ isAuthorized, username }: {isAuthorized: boolean | null, username: string | null}) => {
   const [showNavBar, setShowNavBar] = useState(false);
-  const isAuthenticated = false;
-  const username = "John Doe";
   
   const logout = () => {
     console.log("logout")
@@ -20,9 +18,9 @@ const Navbar = () => {
           <h1 className="text-3xl font-bold">DJANGO<span className="font-extrabold">BLOGS</span></h1>
         </NavLink>
         <ul className="flex items-center justify-end gap-9 text-[#383C4A] lg:flex-1 max-md:hidden dark:text-[#FFFFFF]">
-          {isAuthenticated ? (
+          {isAuthorized ? (
             <>
-              <li>Hi, {username}</li>
+              <li>Hi, <NavLink to={`/profile`} className="font-semibold">{username}</NavLink></li>
               <li onClick={logout} className="cursor-pointer">Logout</li>
             </>
           ) : (

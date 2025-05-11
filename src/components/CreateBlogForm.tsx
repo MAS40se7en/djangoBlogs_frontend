@@ -1,6 +1,6 @@
 import { blogSchema, type BlogFormValues } from "@/lib/Schema"
 import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
 import { Input } from "./ui/input"
@@ -23,7 +23,7 @@ const CreateBlogForm = () => {
         defaultValues: {
             title: "",
             content: "",
-            featured_image: "",
+            featured_image: undefined,
             category: "",
             is_draft: false,
         },
@@ -46,14 +46,14 @@ const CreateBlogForm = () => {
 
     async function onSubmit(values: BlogFormValues) {
         setIsLoading(true)
-        
+
         try {
             mutation.mutate(values)
         } catch (error) {
             console.error(error)
         } finally {
             setIsLoading(false)
-            
+
         }
     }
 
@@ -100,11 +100,27 @@ const CreateBlogForm = () => {
                         <FormField
                             control={form.control}
                             name="featured_image"
-                            render={({ field }) => (
+                            render={() => (
                                 <FormItem>
                                     <FormLabel>Blog Image</FormLabel>
                                     <FormControl>
-                                        <Input type="file" {...field} />
+                                        <Controller
+                                            name="featured_image"
+                                            control={form.control}
+                                            render={({ field }) => (
+                                                <Input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files?.[0];  // Grab the file
+                                                        if (file) {
+                                                            field.onChange(file);  // Pass the file to react-hook-form
+                                                        }
+                                                    }}
+                                                // No need for 'value' here, react-hook-form will manage it internally
+                                                />
+                                            )}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -127,11 +143,11 @@ const CreateBlogForm = () => {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Categories</SelectLabel>
-                                                    <SelectItem value="Frontend">Frontend</SelectItem>
-                                                    <SelectItem value="Backend">Backend</SelectItem>
-                                                    <SelectItem value="Fullstack">Fullstack</SelectItem>
-                                                    <SelectItem value="Web3">Web3</SelectItem>
-                                                    <SelectItem value="Design">Design</SelectItem>
+                                                    <SelectItem value="Technology">Technology</SelectItem>
+                                                    <SelectItem value="Politics">Politics</SelectItem>
+                                                    <SelectItem value="Business">Business</SelectItem>
+                                                    <SelectItem value="Economy">Economy</SelectItem>
+                                                    <SelectItem value="Entertainment">Entertainment</SelectItem>
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>

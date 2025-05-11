@@ -57,8 +57,14 @@ export async function registerUser(data: RegisterFormValues) {
 }
 
 export async function createBlog(data: BlogFormValues) {
+    const token = localStorage.getItem('access')
     try {
-        const response = await api.post(`api/create_blog/`, data)
+        const response = await api.post(`api/create_blog/`, data, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "multipart/form-data",
+            },
+        })
         return response.data
     } catch (error) {
         console.error(error)
@@ -95,16 +101,40 @@ export async function deleteBlog(id: number) {
     }
 }
 
-export async function getUserInfo(username: string) {
+export async function getUsername() {
+    const token = localStorage.getItem('access')
     try {
-        const response = await api.get(`api/get_userinfo/${username}`, { withCredentials: true });
+        const response = await api.get("api/get_username", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
         return response.data;
     } catch (error) {
         console.error(error)
         if (isAxiosError(error) && error.response?.status === 400) {
-            throw new Error("Failed to create blog")
+            throw new Error("Failed to get username")
         }
-        throw new Error('Failed to create blog')
+        throw new Error('Failed to get username')
+    }
+}
+
+export async function getUserInfo(username: string) {
+    const token = localStorage.getItem('access')
+
+    try {
+        const response = await api.get(`api/get_userinfo/${username}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error)
+        if (isAxiosError(error) && error.response?.status === 400) {
+            throw new Error("Failed to get user info")
+        }
+        throw new Error('Failed to get user info')
     }
 }
 

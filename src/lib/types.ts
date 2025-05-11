@@ -25,3 +25,8 @@ export interface Userdata {
     password: string,
     confirmPassword: string,
 }
+
+export interface UserContextType {
+    user: Userdata | null
+    setUser: React.Dispatch<React.SetStateAction<Userdata | null>>
+}
